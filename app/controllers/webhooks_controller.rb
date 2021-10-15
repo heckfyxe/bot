@@ -33,6 +33,8 @@ class WebhooksController < Telegram::Bot::UpdatesController
     when 'Уйти'
       free_place
       respond_with :message, text: 'Bye'
+    when 'Показать список'
+      respond_with :message, text: queue_text
     when /\d+/
       if take_place(value.to_i)
         respond_with :message, text: 'Успешно', reply_markup: main_keyboard
@@ -58,7 +60,8 @@ class WebhooksController < Telegram::Bot::UpdatesController
 
   def main_keyboard
     {
-      keyboard: [%w[Занять Уйти]],
+      keyboard: [%w[Занять Уйти],
+                 %w[Показать список]],
       resize_keyboard: true,
       one_time_keyboard: true
     }
@@ -83,5 +86,10 @@ class WebhooksController < Telegram::Bot::UpdatesController
 
   def free_place
     User.where(nickname: from[:username]).update(place: nil)
+  end
+
+  def queue_text
+    users = User.where.not(place: nil)
+    users.map { |user| "#{user.place} @#{user.nickname} #{user.firstname} #{user.lastname}" }.join("\n")
   end
 end
