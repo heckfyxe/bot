@@ -1,4 +1,6 @@
 class WebhooksController < Telegram::Bot::UpdatesController
+  include Telegram::Bot::UpdatesController::MessageContext
+
   def start!(*)
     save_context :rename!
     respond_with :message, text: 'Вставай, самурай! Введи свое имя и фамилию'
