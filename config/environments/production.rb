@@ -2,7 +2,7 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-
+  routes.default_url_options = { host: 'tg-bot-queue.herokuapp.com', protocol: 'https' } # https is necessary!
   # Code is not reloaded between requests.
   config.cache_classes = true
 
