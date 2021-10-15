@@ -8,8 +8,8 @@ class WebhooksController < Telegram::Bot::UpdatesController
 
   def rename!(firstname = nil, lastname = nil, *)
     if firstname && lastname
-      User.upsert({ nickname: username, firstname: firstname, lastname: lastname }, unique_by: :nickname)
-      respond_with :message, text: "Теперь ты #{firstname} #{lastname}"
+      # User.upsert({ nickname: username, firstname: firstname, lastname: lastname }, unique_by: :nickname)
+      respond_with :message, text: "Теперь ты #{username || 'nil'} #{firstname || 'nil'} #{lastname || 'nil'}"
     else
       save_context :rename!
       respond_with :message, text: 'Введи имя и фамилию'
