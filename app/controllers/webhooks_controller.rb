@@ -62,7 +62,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
   def place_keyboard
     places = User.pluck(:place)
     places = (1..places.count).to_a - places.compact.uniq
-    places = places.map(&:to_s).in_groups_of(4)
+    places = places.map(&:to_s).in_groups_of(4, false)
     {
       keyboard: places,
       resize_keyboard: true,
