@@ -89,7 +89,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
   end
 
   def queue_text
-    users = User.where.not(place: nil)
+    users = User.where.not(place: nil).order(place: :asc)
     return 'Очередь пуста' if users.empty?
 
     users.map { |user| "#{user.place} @#{user.nickname} #{user.firstname} #{user.lastname}" }.join("\n")
