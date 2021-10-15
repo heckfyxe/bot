@@ -11,6 +11,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
       user = User.find_or_initialize_by(nickname: from[:username])
       user.firstname = firstname
       user.lastname = lastname
+      user.chat_id = chat[:id]
       user.save!
       save_context :keyboard!
       respond_with :message, text: "Теперь ты #{firstname} #{lastname}", reply_markup: main_keyboard
@@ -32,6 +33,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
       end
     when 'Уйти'
       free_place
+      notify_next_in_queue
       respond_with :message, text: 'Bye'
     when 'Показать'
       respond_with :message, text: queue_text
@@ -91,5 +93,12 @@ class WebhooksController < Telegram::Bot::UpdatesController
   def queue_text
     users = User.where.not(place: nil)
     users.map { |user| "#{user.place} @#{user.nickname} #{user.firstname} #{user.lastname}" }.join("\n")
+  end
+
+  def notify_next_in_queue
+    user = User.where.not(place: nil).order(place: :asc).first
+    return unless user
+
+    make_telegram_request(bot, :sendMessage).with(text: 'Твоя очередь', chat_id: user.chat_id)
   end
 end
