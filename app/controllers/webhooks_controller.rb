@@ -19,6 +19,19 @@ class WebhooksController < Telegram::Bot::UpdatesController
     end
   end
 
+  def keyboard!(value = nil, *)
+    if value
+      respond_with :message, text: value
+    else
+      save_context :keyboard!
+      respond_with :message, reply_markup: {
+        keyboard: %w[Занять Уйти],
+        resize_keyboard: true,
+        one_time_keyboard: true
+      }
+    end
+  end
+
   def me!(*)
     user = User.find_by(nickname: from[:username])
     if user
