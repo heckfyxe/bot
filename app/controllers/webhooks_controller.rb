@@ -37,7 +37,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
     if value
       respond_with :message, text: "Place: #{value}"
     else
-      save_context :take_place
+      save_context :take_place!
       respond_with :message, text: 'Выбери место', reply_markup: place_keyboard
     end
   end
