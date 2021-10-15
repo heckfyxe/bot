@@ -51,6 +51,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
   def me!(*)
     user = User.find_by(nickname: from[:username])
     if user
+      save_context :keyboard!
       respond_with :message, text: "#{user.firstname} #{user.lastname}"
     else
       save_context :rename!
@@ -60,6 +61,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
 
   def reset_queue!
     User.update_all(place: nil)
+    save_context :keyboard!
     respond_with :message, text: 'Успешно'
   end
 
