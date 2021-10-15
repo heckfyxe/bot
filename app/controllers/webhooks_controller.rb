@@ -33,7 +33,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
     when 'Уйти'
       free_place
       respond_with :message, text: 'Bye'
-    when 'Показать список'
+    when 'Показать'
       respond_with :message, text: queue_text
     when /\d+/
       if take_place(value.to_i)
