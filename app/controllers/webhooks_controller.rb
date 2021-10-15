@@ -17,6 +17,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
   end
 
   def me!(*)
-    respond_with :message, text: from[:username]
+    user = User.find_by(nickname: from[:username])
+    respond_with :message, text: "#{user.firstname} #{user.lastname}"
   end
 end
