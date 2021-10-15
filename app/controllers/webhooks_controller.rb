@@ -12,6 +12,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
       user.firstname = firstname
       user.lastname = lastname
       user.save!
+      save_context :keyboard!
       respond_with :message, text: "Теперь ты #{firstname} #{lastname}"
     else
       save_context :rename!
@@ -25,7 +26,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
     else
       save_context :keyboard!
       respond_with :message, text: 'promt', reply_markup: {
-        keyboard: %w[Занять Уйти],
+        keyboard: %w[[Занять Уйти]],
         resize_keyboard: true,
         one_time_keyboard: true
       }
