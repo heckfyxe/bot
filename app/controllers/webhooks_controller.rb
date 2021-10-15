@@ -26,7 +26,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
     when 'Занять'
       respond_with :message, text: 'Выбери место', reply_markup: place_keyboard
     when '1'...'12'
-      respond_with :message, text: value
+      respond_with :message, text: value, reply_markup: main_keyboard
     else
       respond_with :message, text: 'promt', reply_markup: main_keyboard
     end
