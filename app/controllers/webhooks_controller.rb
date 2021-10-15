@@ -61,7 +61,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
   def main_keyboard
     {
       keyboard: [%w[Занять Уйти],
-                 %w[Показать список]],
+                 ['Показать список']],
       resize_keyboard: true,
       one_time_keyboard: true
     }
