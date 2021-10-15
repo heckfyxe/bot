@@ -64,8 +64,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
     {
       keyboard: [%w[Занять Уйти],
                  ['Показать список']],
-      resize_keyboard: true,
-      one_time_keyboard: true
+      resize_keyboard: true
     }
   end
 
@@ -75,8 +74,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
     places = places.map(&:to_s).in_groups_of(4, false)
     {
       keyboard: places,
-      resize_keyboard: true,
-      one_time_keyboard: true
+      resize_keyboard: true
     }
   end
 
