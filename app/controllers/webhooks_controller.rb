@@ -24,7 +24,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
       respond_with :message, text: value
     else
       save_context :keyboard!
-      respond_with :message, text: '', reply_markup: {
+      respond_with :message, text: 'promt', reply_markup: {
         keyboard: %w[Занять Уйти],
         resize_keyboard: true,
         one_time_keyboard: true
