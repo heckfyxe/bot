@@ -13,11 +13,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
       user.lastname = lastname
       user.save!
       save_context :keyboard!
-      respond_with :message, text: "Теперь ты #{firstname} #{lastname}", reply_markup: {
-        keyboard: [%w[Занять Уйти]],
-        resize_keyboard: true,
-        one_time_keyboard: true
-      }
+      respond_with :message, text: "Теперь ты #{firstname} #{lastname}", reply_markup: main_keyboard
     else
       save_context :rename!
       respond_with :message, text: 'Введи имя и фамилию'
@@ -27,23 +23,22 @@ class WebhooksController < Telegram::Bot::UpdatesController
   def keyboard!(value = nil, *)
     case value
     when 'Занять'
-      save_context :keyboard!
-      respond_with :message, text: 'Выбери место', reply_markup: {
-        keyboard: [[1, 2, 3, 4],
-                   [5, 6, 7, 8],
-                   [9, 10, 11, 12]],
-        resize_keyboard: true,
-        one_time_keyboard: true
-      }
+      save_context :take_place
+      respond_with :message, text: 'Выбери место', reply_markup: place_keyboard
     when '1'...'12'
       respond_with :message, text: value
     else
       save_context :keyboard!
-      respond_with :message, text: 'promt', reply_markup: {
-        keyboard: [%w[Занять Уйти]],
-        resize_keyboard: true,
-        one_time_keyboard: true
-      }
+      respond_with :message, text: 'promt', reply_markup: main_keyboard
+    end
+  end
+
+  def take_place(value = nil, *)
+    if value
+      respond_with :message, text: value
+    else
+      save_context :take_place
+      respond_with :message, text: 'Выбери место', reply_markup: place_keyboard
     end
   end
 
@@ -55,5 +50,25 @@ class WebhooksController < Telegram::Bot::UpdatesController
       save_context :rename!
       respond_with :message, text: 'Кто ты?'
     end
+  end
+
+  private
+
+  def main_keyboard
+    {
+      keyboard: [%w[Занять Уйти]],
+      resize_keyboard: true,
+      one_time_keyboard: true
+    }
+  end
+
+  def place_keyboard
+    {
+      keyboard: [[1, 2, 3, 4],
+                 [5, 6, 7, 8],
+                 [9, 10, 11, 12]],
+      resize_keyboard: true,
+      one_time_keyboard: true
+    }
   end
 end
