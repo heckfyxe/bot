@@ -13,7 +13,11 @@ class WebhooksController < Telegram::Bot::UpdatesController
       user.lastname = lastname
       user.save!
       save_context :keyboard!
-      respond_with :message, text: "Теперь ты #{firstname} #{lastname}"
+      respond_with :message, text: "Теперь ты #{firstname} #{lastname}", reply_markup: {
+        keyboard: [%w[Занять Уйти]],
+        resize_keyboard: true,
+        one_time_keyboard: true
+      }
     else
       save_context :rename!
       respond_with :message, text: 'Введи имя и фамилию'
@@ -21,7 +25,17 @@ class WebhooksController < Telegram::Bot::UpdatesController
   end
 
   def keyboard!(value = nil, *)
-    if value
+    case value
+    when 'Занять'
+      save_context :take_place
+      respond_with :message, text: 'Выбери место', reply_markup: {
+        keyboard: [[1, 2, 3, 4],
+                   [5, 6, 7, 8],
+                   [9, 10, 11, 12]],
+        resize_keyboard: true,
+        one_time_keyboard: true
+      }
+    when '1'...'12'
       respond_with :message, text: value
     else
       save_context :keyboard!
