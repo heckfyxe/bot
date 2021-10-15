@@ -99,6 +99,6 @@ class WebhooksController < Telegram::Bot::UpdatesController
     user = User.where.not(place: nil).order(place: :asc).first
     return unless user
 
-    make_telegram_request(bot, :sendMessage).with(text: 'Твоя очередь', chat_id: user.chat_id)
+    bot.public_send('send_message', chat_id: user.chat_id, text: 'Ты следующий')
   end
 end
