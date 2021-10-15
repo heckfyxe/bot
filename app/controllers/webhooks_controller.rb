@@ -54,9 +54,9 @@ class WebhooksController < Telegram::Bot::UpdatesController
 
   def place_keyboard
     {
-      keyboard: [[1, 2, 3, 4],
-                 [5, 6, 7, 8],
-                 [9, 10, 11, 12]],
+      keyboard: [%w[1 2 3 4],
+                 %w[5 6 7 8],
+                 %w[9 10 11 12]],
       resize_keyboard: true,
       one_time_keyboard: true
     }
