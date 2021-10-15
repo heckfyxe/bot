@@ -58,6 +58,11 @@ class WebhooksController < Telegram::Bot::UpdatesController
     end
   end
 
+  def reset_queue!
+    User.update_all(place: nil)
+    respond_with :message, text: 'Успешно'
+  end
+
   private
 
   def main_keyboard
