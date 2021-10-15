@@ -21,24 +21,14 @@ class WebhooksController < Telegram::Bot::UpdatesController
   end
 
   def keyboard!(value = nil, *)
+    save_context :keyboard!
     case value
     when 'Занять'
-      save_context :take_place!
       respond_with :message, text: 'Выбери место', reply_markup: place_keyboard
     when '1'...'12'
       respond_with :message, text: value
     else
-      save_context :keyboard!
       respond_with :message, text: 'promt', reply_markup: main_keyboard
-    end
-  end
-
-  def take_place!(value = nil, *)
-    if value
-      respond_with :message, text: "Place: #{value}"
-    else
-      save_context :take_place!
-      respond_with :message, text: 'Выбери место', reply_markup: place_keyboard
     end
   end
 
