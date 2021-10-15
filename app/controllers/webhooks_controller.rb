@@ -25,10 +25,17 @@ class WebhooksController < Telegram::Bot::UpdatesController
     case value
     when 'Занять'
       respond_with :message, text: 'Выбери место', reply_markup: place_keyboard
-    when '1'...'12'
-      respond_with :message, text: value, reply_markup: main_keyboard
+    when 'Уйти'
+      free_place
+      respond_with :message, text: 'Bye'
+    when /\d+/
+      if take_place(value.to_i)
+        respond_with :message, text: 'Успешно', reply_markup: main_keyboard
+      else
+        respond_with :message, text: 'Уже занято', reply_markup: place_keyboard
+      end
     else
-      respond_with :message, text: 'promt', reply_markup: main_keyboard
+      respond_with :message, text: 'Действуй!', reply_markup: main_keyboard
     end
   end
 
@@ -53,12 +60,23 @@ class WebhooksController < Telegram::Bot::UpdatesController
   end
 
   def place_keyboard
+    places = User.pluck(:place)
+    places = (1..places.count).to_a - places.compact.uniq
+    places = places.map(&:to_s).in_groups_of(4)
     {
-      keyboard: [%w[1 2 3 4],
-                 %w[5 6 7 8],
-                 %w[9 10 11 12]],
+      keyboard: places,
       resize_keyboard: true,
       one_time_keyboard: true
     }
+  end
+
+  def take_place(place)
+    return false if User.exists?(place: place)
+
+    User.where(nickname: from[:username]).update(place: place)
+  end
+
+  def free_place
+    User.where(nickname: from[:username]).update(place: nil)
   end
 end
