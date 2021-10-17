@@ -25,10 +25,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
     save_context :keyboard!
     case value
     when 'Занять'
-      if Time.now.utc < Time.current.change(hour: 21, min: 5)
-        respond_with :message, text: 'Куда прешь?! Ещё не время'
-        return
-      end
+      return unless can_take_place?
 
       keyboard = place_keyboard
       if keyboard[:keyboard].empty?
@@ -43,6 +40,8 @@ class WebhooksController < Telegram::Bot::UpdatesController
     when 'Показать'
       respond_with :message, text: queue_text
     when /\d+/
+      return unless can_take_place?
+
       if take_place(value.to_i)
         respond_with :message, text: 'Успешно', reply_markup: main_keyboard
       else
@@ -112,5 +111,14 @@ class WebhooksController < Telegram::Bot::UpdatesController
     return unless user
 
     bot.public_send('send_message', { chat_id: user.chat_id, text: 'Ты следующий' })
+  end
+
+  def can_take_place?
+    if Time.now.utc < Time.current.change(hour: 9, min: 20)
+      respond_with :message, text: 'Куда прешь?! Ещё не время'
+      return false
+    end
+
+    true
   end
 end
