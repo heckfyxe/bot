@@ -7,7 +7,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
   end
 
   def rename!(name = nil, *)
-    if name.split.count >= 2
+    if !name.nil? && name.split.count >= 2
       firstname = name.split(' ')[0]
       lastname = name.split(' ')[1]
       user = User.find_or_initialize_by(nickname: from[:username])
