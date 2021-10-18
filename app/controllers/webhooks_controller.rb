@@ -35,7 +35,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
       end
     when 'Уйти'
       free_place
-      # notify_next_in_queue
+      notify_next_in_queue
       respond_with :message, text: 'Bye'
     when 'Показать'
       respond_with :message, text: queue_text
@@ -109,13 +109,12 @@ class WebhooksController < Telegram::Bot::UpdatesController
     users.map { |user| "#{user.place} @#{user.nickname} #{user.firstname} #{user.lastname}" }.join("\n")
   end
 
-  # def notify_next_in_queue
-  #   user = User.where(nickname: from[:username])
-  #   next_user = User.where('place > ?', user.place).order(place: :asc)
-  #   return unless next_user
-  #
-  #   bot.public_send('send_message', { chat_id: next_user.chat_id, text: 'Ты следующий' })
-  # end
+  def notify_next_in_queue
+    user = User.where.not(place: nil).order(place: :asc).first
+    return unless user
+
+    bot.public_send('send_message', { chat_id: user.chat_id, text: 'Ты следующий' })
+  end
 
   def can_take_place?
     if Time.now.utc < Time.current.change(hour: 9, min: 20)
