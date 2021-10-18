@@ -40,7 +40,8 @@ class WebhooksController < Telegram::Bot::UpdatesController
     when 'Показать'
       respond_with :message, text: queue_text
     when 'Закончить'
-
+      notify_next_in_queue
+      respond_with :message, text: 'Готово'
     when /\d+/
       return unless can_take_place?
 
