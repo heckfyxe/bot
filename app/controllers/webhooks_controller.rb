@@ -39,6 +39,8 @@ class WebhooksController < Telegram::Bot::UpdatesController
       respond_with :message, text: 'Bye'
     when 'Показать'
       respond_with :message, text: queue_text
+    when 'Закончить'
+
     when /\d+/
       return unless can_take_place?
 
@@ -74,7 +76,8 @@ class WebhooksController < Telegram::Bot::UpdatesController
   def main_keyboard
     {
       keyboard: [%w[Занять Уйти],
-                 ['Показать список']],
+                 ['Показать список'],
+                 ['Закончить свою очередь']],
       resize_keyboard: true
     }
   end
@@ -107,10 +110,11 @@ class WebhooksController < Telegram::Bot::UpdatesController
   end
 
   def notify_next_in_queue
-    user = User.where.not(place: nil).order(place: :asc).first
-    return unless user
+    user = User.where(nickname: from[:username])
+    next_user = User.where('place > ?', user.place).order(place: :asc)
+    return unless next_user
 
-    bot.public_send('send_message', { chat_id: user.chat_id, text: 'Ты следующий' })
+    bot.public_send('send_message', { chat_id: next_user.chat_id, text: 'Ты следующий' })
   end
 
   def can_take_place?
