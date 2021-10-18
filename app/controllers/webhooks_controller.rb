@@ -7,6 +7,7 @@ class WebhooksController < Telegram::Bot::UpdatesController
   end
 
   def rename!(name = nil)
+    Rails.logger.info name
     if !name.nil? && name.split.count >= 2
       firstname = name.split[0]
       lastname = name.split[1]
