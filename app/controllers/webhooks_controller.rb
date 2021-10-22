@@ -117,8 +117,8 @@ class WebhooksController < Telegram::Bot::UpdatesController
   end
 
   def can_take_place?
-    if Time.now.utc < Time.current.change(hour: 9, min: 20)
-      respond_with :message, text: 'Куда прешь?! Ещё не время'
+    if Time.now.utc < Time.current.change(hour: 7, min: 40)
+      respond_with :message, text: 'Куда прешь?! Начало в 10:40'
       return false
     end
 
